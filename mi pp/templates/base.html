@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cursos{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('home') }}" class="text-lg font-bold">Nexus <img src="{{ url_for('static', filename='img/Tech-removebg-preview.png') }}" alt="Logo" class="prime" height="50px" width="50px"></a>
+            <div class="flex items-center space-x-4">
+                <a href="{{ url_for('courses') }}" class="text-sm"><i class="fa-solid fa-book-open-reader"></i> Cursos</a>
+                {% if session.get('role') == 'admin' %}
+                <a href="{{ url_for('admin') }}" class="text-sm"><i class="fa-solid fa-gear"></i> Administración</a>
+                {% endif %}
+                {% if 'user_id' in session %}
+                <div class="relative">
+                    <img src="{{ url_for('static', filename='profile_pics/' + session.get('profile_image', 'default.png')) }}" 
+                         alt="Perfil" class="w-10 h-10 rounded-full border cursor-pointer" id="profileImage">
+                    <div id="profileMenu" class="hidden absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-lg">
+                        <a href="{{ url_for('edit_profile') }}" class="block px-4 py-2 hover:bg-gray-200"><i class="fa-solid fa-pen-ruler"></i> Editar Perfil</a>
+                        <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-gray-200"><i class="fa-solid fa-door-open"></i> Cerrar Sesión</a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="text-sm"><i class="fa-solid fa-key"></i> Iniciar Sesión</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto mt-8">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <footer class="footer">
+
+        <section class="footer__content">
+
+            <div class="footer__main">
+                <a href="#" class="footer__logo-link">
+                    <img src="{{ url_for('static', filename='img/Tech-removebg-preview.png') }}" alt="Logo" class="prime2"><h5><strong>Nexus</strong></h5>
+                </a>
+    
+                <nav class="footer__links">
+                    <a href="#" class="footer__link">Sobre Nosotros</a>
+                    <a href="#" class="footer__link">Servicios</a>
+                    <a href="#" class="footer__link">FAQS</a>
+                    <a href="#" class="footer__link">Contacto</a>
+                </nav>
+    
+                <article class="footer__contact">
+                    <h4 class="footer__copy">Contactanos:</h4>
+    
+                    <p class="footer__info">
+                        Email: nexustech0@gmail.com
+                    </p>
+    
+                    <p class="footer__info">
+                        Telefono: 554-433-2211
+                    </p>
+    
+                    <p class="footer__info">
+                        San Luis, num25, Walley, Santo Domingo.
+                    </p>
+                </article>
+    
+                <form class="footer__newsletter">
+                    <input type="email" placeholder="Email" class="footer__email">
+                    <input type="submit" value="Suscribete " class="footer__submit">
+                </form>
+
+                <nav class="footer__social">
+
+                    <a href="#" class="footer__social-links">
+                        <i class="fa-brands fa-linkedin p"></i>
+                    </a>
+
+                    <a href="#" class="footer__social-links">
+                        <i class="fa-brands fa-facebook p"></i>
+                    </a>
+
+                    <a href="#" class="footer__social-links">
+                        <i class="fa-brands fa-twitter p" class="2"></i>
+                    </a>
+
+                </nav>
+
+            </div>
+
+            <div class="footer__copyright">
+
+                <p class="footer__copyright-text">&copy; Nexus-Tech - Derechos reservados.</p>
+
+            </div>
+
+        </section>
+
+
+    </footer>
+
+<style>
+            .prime {
+                margin-left: 40px;
+                margin-top: -37px;
+            }
+
+            *,
+::before,
+::after {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root{
+            --color-primario: #036df7;
+    --color-secundario: #fbfbff;
+    --padding-container: 80px 0;
+    --gray-color: #000000;
+}
+
+body,
+input,
+textarea,
+button {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+
+
+/** Foooter **/
+
+.footer {
+    width: 100%;
+    background-color: var(--color-secundario);
+}
+
+.footer__content {
+    padding: 80px 0;
+    width: min(90%, 1200px);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.footer__main {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.footer__link {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+.footer__link:hover {
+    text-decoration: underline;
+}
+
+.footer__copy {
+    justify-self: center;
+    background-color: var(--color-primario);
+    color: var(--color-secundario);
+    font-weight: 500;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.footer__contact {
+    max-width: 250px;
+    display: grid;
+    gap: 1.3rem;
+    color: rgb(0, 0, 0);
+    text-align: center;
+}
+
+.footer__newsletter {
+    width: min(100%, 400px);
+    padding: 2rem 1.5rem;
+    border-radius: 10px;
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: 48px 48px;
+    background-color: #fbfbff00;
+}
+
+.footer__email {
+    border: 1px solid #000000;
+    border-radius: 6px;
+    padding: 0 1.5rem;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+}
+
+.footer__email::placeholder {
+    color: rgb(0, 0, 0);
+}
+
+.footer__submit {
+    border: none;
+    border-radius: 6px;
+    color: white;
+    background-color: #fbfbff;
+}
+
+.footer__social {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 1rem;
+}
+
+.footer__social-links {
+    width: 36px;
+    height: 36px;
+    background-color: #fff;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer__copyright {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #000000;
+}
+
+.footer__copyright-text {
+    text-align: center;
+    color: rgb(0, 0, 0);
+}
+
+
+@media (width >= 900px) {
+
+    /** Foooter **/
+
+    .footer {
+        background-color: #fff;
+    }
+
+    .footer__content {
+        border-radius: 30px 30px 0 0;
+        background-color: #ffffff;
+
+    }
+
+    .footer__main {
+        width: 90%;
+        margin: 0 auto;
+        grid-template-columns: 1fr 55% 1fr;
+        grid-template-areas:
+            "logo links media"
+            "contact news news";
+        justify-items: start;
+    }
+
+    .footer__links {
+        grid-area: links;
+        
+        width: 100%;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .footer__copy {
+        justify-self: start;
+    }
+
+    .footer__contact {
+        grid-area: contact;
+
+        text-align: left;
+    }
+
+    .footer__newsletter {
+        grid-area: news;
+        align-self: start;
+        justify-self: end;
+    }
+
+    .footer__email {
+        border: 1px solid #fff;
+        border-radius: 6px;
+        padding: 0 1.5rem;
+        background-color: transparent;
+        color: white;
+    }
+
+    .footer__email::placeholder {
+        color: white;
+    }
+
+    .footer__submit {
+        background-color: #0075fa;
+        color: black;
+        border: none;
+        border-radius: 6px;
+    }
+
+    .footer__social {
+        grid-area: media;
+        justify-self: end;
+    }
+
+    
+    .footer__copyright {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+
+    .p{
+        color: rgb(5, 104, 252);
+    }
+
+    .p:hover{
+        color: blue;
+    }
+}
+
+        .prime2 {
+            height: 100px;
+            width: 100px;
+        }
+
+
+        h5{
+            color: rgb(64, 0, 138);
+            font-size: 20px;
+margin-top: -63px;
+margin-left: 75px;
+        }
+
+
+        </style>
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let profileImage = document.getElementById('profileImage');
+            let profileMenu = document.getElementById('profileMenu');
+
+            if (profileImage) {
+                profileImage.addEventListener('click', function() {
+                    profileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

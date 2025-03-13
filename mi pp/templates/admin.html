@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Administración{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Panel de Administración</h1>
+
+<!-- Mensajes de éxito o error -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-6">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} p-4 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Formulario para agregar usuarios -->
+<div class="mb-8 p-4 bg-gray-100 rounded shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Agregar Nuevo Usuario</h2>
+    <form method="POST" action="{{ url_for('add_user') }}" enctype="multipart/form-data">
+        <div class="flex flex-col mb-4">
+            <label for="username" class="font-medium">Nombre de Usuario</label>
+            <input type="text" id="username" name="username" class="border p-2 rounded" required>
+        </div>
+        <div class="flex flex-col mb-4">
+            <label for="email" class="font-medium">Correo Electrónico</label>
+            <input type="email" id="email" name="email" class="border p-2 rounded" required>
+        </div>
+        <div class="flex flex-col mb-4">
+            <label for="password" class="font-medium">Contraseña</label>
+            <input type="password" id="password" name="password" class="border p-2 rounded" required>
+        </div>
+        <div class="flex flex-col mb-4">
+            <label for="role" class="font-medium">Rol</label>
+            <select id="role" name="role" class="border p-2 rounded" required>
+                <option value="user">Usuario</option>
+                <option value="admin">Administrador</option>
+            </select>
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded">Agregar Usuario</button>
+    </form>
+</div>
+
+<!-- Tabla de usuarios -->
+<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <table class="w-full">
+        <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="py-3 px-4">ID</th>
+                <th class="py-3 px-4">Usuario</th>
+                <th class="py-3 px-4">Email</th>
+                <th class="py-3 px-4">Rol</th>
+                <th class="py-3 px-4">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr class="border-b">
+                <td class="py-3 px-4">{{ user.id }}</td>
+                <td class="py-3 px-4">{{ user.username }}</td>
+                <td class="py-3 px-4">{{ user.email }}</td>
+                <td class="py-3 px-4">{{ user.role }}</td>
+                <td class="py-3 px-4">
+                    {% if user.role != 'admin' %}
+                        <!-- Editar Usuario -->
+                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">✏ Editar</a>
+                        
+                        <!-- Eliminar Usuario -->
+                        <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');" style="display: inline;">
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">🗑 Eliminar</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
